@@ -2,15 +2,21 @@ import ReviewModel from "../../models/ReviewModel";
 import { StarsReview } from "./StarsReview";
 
 export const Review: React.FC<{ review: ReviewModel }> = (props) => {
-    
-    const date = new Date(props.review.date);
+
+    console.log("props: ",props.review.date);
+
+    const day = props.review.date;
+    const rate = props.review.rating;
+
+    const date = new Date(day ? day : '');
+    const rating = rate ? rate : 0;
 
     const longMonth = date.toLocaleString('en-us', { month: 'long' });
     const dateDay = date.getDate();
     const dateYear = date.getFullYear();
 
     const dateRender = longMonth + ' ' + dateDay + ', ' + dateYear;
-    
+
     return (
         <div>
             <div className='col-sm-8 col-md-8'>
@@ -20,7 +26,7 @@ export const Review: React.FC<{ review: ReviewModel }> = (props) => {
                         {dateRender}
                     </div>
                     <div className='col'>
-                        <StarsReview rating={props.review.rating} size={16} />
+                        <StarsReview rating={rating} size={16} />
                     </div>
                 </div>
                 <div className='mt-2'>
@@ -29,7 +35,7 @@ export const Review: React.FC<{ review: ReviewModel }> = (props) => {
                     </p>
                 </div>
             </div>
-            <hr/>
+            <hr />
         </div>
     );
 }

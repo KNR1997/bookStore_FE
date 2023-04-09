@@ -4,6 +4,7 @@ import ReviewModel from "../../models/ReviewModel";
 import { SpinnerLoading } from "../Utils/SpinnerLoading";
 import { StarsReview } from "./StarsReview";
 import { CheckoutAndReviewBox } from "./CheckoutAndReviewBox";
+import { LatestReviews } from "./LatestReviews";
 
 export const BookCheckoutPage = () => {
 
@@ -52,11 +53,11 @@ export const BookCheckoutPage = () => {
 
     useEffect(() => {
         const fetchBookReviews = async () => {
-            const reviewUrl: string = `http://localhost:8080/api/reviews/search/findByBookId=${bookId}`;
+            const reviewUrl: string = `http://localhost:8080/api/reviews/search/findByBookId?bookId=${bookId}`;
 
             const responseReviews = await fetch(reviewUrl);
 
-            if(!responseReviews.ok) {
+            if (!responseReviews.ok) {
                 throw new Error('Something went wrong!');
             }
 
@@ -65,26 +66,26 @@ export const BookCheckoutPage = () => {
             const responseData = responseJsonReviews._embedded.reviews;
 
             const loadedReviews: ReviewModel[] = [];
-            
+
             let weightedStarReviews: number = 0;
 
             for (const key in responseData) {
                 loadedReviews.push({
-                    id:responseData[key].id,
-                    userEmail:responseData[key].userEmail,
-                    date:responseData[key].date,
-                    rating:responseData[key].rating,
-                    book_id:responseData[key].bookId,
-                    reviewDescription:responseData[key].reviewDescription,
+                    id: responseData[key].id,
+                    userEmail: responseData[key].userEmail,
+                    date: responseData[key].date,
+                    rating: responseData[key].rating,
+                    book_id: responseData[key].bookId,
+                    reviewDescription: responseData[key].reviewDescription,
                 });
-                weightedStarReviews = weightedStarReviews + responseData[key].rating;  
+                weightedStarReviews = weightedStarReviews + responseData[key].rating;
             }
 
-            if(loadedReviews) {
+            if (loadedReviews) {
                 const round = (Math.round((weightedStarReviews / loadedReviews.length) * 2) / 2).toFixed(1);
                 setTotalStarts(Number(round));
             }
-            
+
             setReviews(loadedReviews);
             setIsLoadingReview(false);
         };
@@ -92,7 +93,7 @@ export const BookCheckoutPage = () => {
         fetchBookReviews().catch((error: any) => {
             setIsLoadingReview(false);
             setHttpError(error.message);
-    })
+        })
     }, []);
 
 
@@ -127,7 +128,7 @@ export const BookCheckoutPage = () => {
                             <h2>{book?.title}</h2>
                             <h5 className='text-primary'>{book?.author}</h5>
                             <p className='lead'>{book?.description}</p>
-                            <StarsReview rating={4} size={32}/>
+                            <StarsReview rating={4} size={32} />
                         </div>
                     </div>
                     <CheckoutAndReviewBox book={book} mobile={false} />
@@ -148,9 +149,11 @@ export const BookCheckoutPage = () => {
                         <h2>{book?.title}</h2>
                         <h5 className='text-primary'>{book?.author}</h5>
                         <p className='lead'>{book?.description}</p>
-                        <StarsReview rating={4} size={32}/>
+                        <StarsReview rating={4} size={32} />
                     </div>
                     <CheckoutAndReviewBox book={book} mobile={true} />
+                    <hr />
+                    <LatestReviews reviews={reviews} bookId={book?.id} mobile={true} />
                 </div>
                 <hr />
             </div>
