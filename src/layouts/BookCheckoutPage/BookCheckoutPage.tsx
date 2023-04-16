@@ -196,8 +196,8 @@ export const BookCheckoutPage = () => {
                             <StarsReview rating={totalStarts} size={32} />
                         </div>
                     </div>
-                    <CheckoutAndReviewBox book={book} mobile={false} currentLoansCount={currentLoansCount
-                    }/>
+                    <CheckoutAndReviewBox book={book} mobile={false} currentLoansCount={currentLoansCount}
+                     isAuthenticated={authState?.isAuthenticated} isCheckedOut={isCheckedOut}/>
                 </div>
                 <hr />
             </div>
@@ -217,8 +217,8 @@ export const BookCheckoutPage = () => {
                         <p className='lead'>{book?.description}</p>
                         <StarsReview rating={totalStarts} size={32} />
                     </div>
-                    <CheckoutAndReviewBox book={book} mobile={true} currentLoansCount={currentLoansCount
-                    }/>
+                    <CheckoutAndReviewBox book={book} mobile={true} currentLoansCount={currentLoansCount}
+                    isAuthenticated={authState?.isAuthenticated} isCheckedOut={isCheckedOut}/>
                     <hr />
                     <LatestReviews reviews={reviews} bookId={book?.id} mobile={true} />
                 </div>
