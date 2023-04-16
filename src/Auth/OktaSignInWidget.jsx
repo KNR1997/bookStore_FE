@@ -6,10 +6,6 @@ import { oktaConfig } from '../lib/oktaConfig';
 const OktaSignInWidget = ({onSuccess, onError}) => {
     const widgetRef = useRef();
 
-    console.log(onSuccess);
-    console.log(onError);
-
-
     useEffect(() => {
         if(!widgetRef.current) {
             return false;
