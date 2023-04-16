@@ -31,6 +31,8 @@ export const BookCheckoutPage = () => {
 
     const bookId = (window.location.pathname).split('/')[2];
 
+    console.log(authState);
+
     useEffect(() => {
         const fetchBook = async () => {
             const baseUrl: string = `http://localhost:8080/api/books/${bookId}`;
@@ -61,7 +63,7 @@ export const BookCheckoutPage = () => {
             setIsLoading(false);
             setHttpError(error.message);
         })
-    }, []);
+    }, [isCheckedOut]);
 
     useEffect(() => {
         const fetchBookReviews = async () => {
@@ -133,7 +135,7 @@ export const BookCheckoutPage = () => {
             setIsLoadingCurrentLoansCount(false);
             setHttpError(error.message);
         })
-    }, [authState]);
+    }, [authState, isCheckedOut]);
 
     useEffect(() => {
         const fetchUserCheckedOutBook = async () => {
@@ -176,6 +178,23 @@ export const BookCheckoutPage = () => {
         )
     }
 
+    async function CheckoutBook() {
+
+        const url = `http://localhost:8080/api/books/secure/checkout/?bookId=${book?.id}`;
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        };
+        const checkoutResponse = await fetch(url, requestOptions);
+        if (!checkoutResponse.ok) {
+            throw new Error('Something went wrong!');
+        }
+        setIsCheckedOut(true);
+    }
+
     return (
         <div>
             <div className='container d-none d-lg-block'>
@@ -197,7 +216,8 @@ export const BookCheckoutPage = () => {
                         </div>
                     </div>
                     <CheckoutAndReviewBox book={book} mobile={false} currentLoansCount={currentLoansCount}
-                     isAuthenticated={authState?.isAuthenticated} isCheckedOut={isCheckedOut}/>
+                     isAuthenticated={authState?.isAuthenticated} isCheckedOut={isCheckedOut}
+                     checkoutBook={CheckoutBook}/>
                 </div>
                 <hr />
             </div>
@@ -218,7 +238,8 @@ export const BookCheckoutPage = () => {
                         <StarsReview rating={totalStarts} size={32} />
                     </div>
                     <CheckoutAndReviewBox book={book} mobile={true} currentLoansCount={currentLoansCount}
-                    isAuthenticated={authState?.isAuthenticated} isCheckedOut={isCheckedOut}/>
+                    isAuthenticated={authState?.isAuthenticated} isCheckedOut={isCheckedOut}
+                    checkoutBook={CheckoutBook}/>
                     <hr />
                     <LatestReviews reviews={reviews} bookId={book?.id} mobile={true} />
                 </div>
