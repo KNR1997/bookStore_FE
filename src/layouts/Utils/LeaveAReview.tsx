@@ -1,16 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StarsReview } from './StarsReview';
+import Sentiment from 'sentiment';
 
 export const LeaveAReview: React.FC<{ submitReview: any }> = (props) => {
 
     const [starInput, setStarInput] = useState(0);
     const [displayInput, setDisplayInput] = useState(false);
     const [reviewDescription, setReviewDescription] = useState('');
+    const [sentimentScore, setSentimentScore] = useState(0);
 
     function starValue(value: number) {
         setStarInput(value);
         setDisplayInput(true);
     }
+
+    const sentiment = new Sentiment();
+
+    useEffect(() => {
+        setSentimentScore(sentiment.analyze(reviewDescription).comparative);
+    }, [reviewDescription]);
+
+    console.log("score",sentimentScore);
 
     return (
         <div className='dropdown' style={{ cursor: 'pointer' }}>
@@ -46,7 +56,7 @@ export const LeaveAReview: React.FC<{ submitReview: any }> = (props) => {
                     </div>
 
                     <div>
-                        <button type='button' onClick={() => props.submitReview(starInput, reviewDescription)} className='btn btn-primary mt-3'>Submit Review</button>
+                        <button type='button' onClick={() => props.submitReview(starInput, reviewDescription, sentimentScore)} className='btn btn-primary mt-3'>Submit Review</button>
                     </div>
                 </form>
             }

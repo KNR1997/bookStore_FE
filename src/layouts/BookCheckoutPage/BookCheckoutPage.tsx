@@ -36,8 +36,6 @@ export const BookCheckoutPage = () => {
 
     const bookId = (window.location.pathname).split('/')[2];
 
-    console.log(authState);
-
     useEffect(() => {
         const fetchBook = async () => {
             const baseUrl: string = `http://localhost:8080/api/books/${bookId}`;
@@ -227,13 +225,14 @@ export const BookCheckoutPage = () => {
         setIsCheckedOut(true);
     }
 
-    async function submitReview(starInput: number, reviewDescription: string) {
+    async function submitReview(starInput: number, reviewDescription: string, sentimentScore: number) {
         let bookId: number = 0;
         if (book?.id) {
             bookId = book.id;
         }
 
-        const reviewRequesModel = new ReviewRequestModel(starInput, bookId, reviewDescription);
+        const reviewRequesModel = new ReviewRequestModel(starInput, bookId, reviewDescription, sentimentScore);
+        console.log(reviewRequesModel);
         const url = 'http://localhost:8080/api/reviews/secure';
         const requestOptions = {
             method: 'POST',
